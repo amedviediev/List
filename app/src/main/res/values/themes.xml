@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:dither">true</item>
+        <item name="android:antialias">true</item>
+        <item name="android:datePickerStyle">@android:style/Theme.Holo.Dialog.NoActionBar</item>
+    </style>
+
+    <style name="Theme.Glass" parent="Theme">
+        <item name="android:buttonStyle">@style/btnGlass</item>
+        <item name="android:radioButtonStyle">@style/radioGlass</item>
+        <item name="android:textViewStyle">@style/btnGlass</item>
+        <item name="android:editTextStyle">@style/editGlass</item>
+        <item name="android:editTextBackground">@drawable/glass_edittext</item>
+        <item name="android:windowBackground">@null</item>
+    </style>
+
+</resources>

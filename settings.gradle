@@ -1,0 +1,3 @@
+include ':app', ':lib-core', ':lib-manipulation'
+project(':lib-core').projectDir = new File('app/libs/lib-core')
+project(':lib-manipulation').projectDir = new File('app/libs/lib-manipulation')

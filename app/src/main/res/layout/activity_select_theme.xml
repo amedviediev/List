@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RadioGroup
+        android:id="@+id/radioTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/theme_default"
+            android:onClick="onClickRadioSelect"
+            android:id="@+id/radioDefault"/>
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/theme_forest"
+            android:id="@+id/radioForest"
+            android:onClick="onClickRadioSelect" />
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/theme_princess"
+            android:id="@+id/radioPrincess"
+            android:onClick="onClickRadioSelect" />
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/theme_sunset"
+            android:id="@+id/radioSunset"
+            android:onClick="onClickRadioSelect" />
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/theme_iris"
+            android:id="@+id/radioIris"
+            android:onClick="onClickRadioSelect"/>
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/buttonsLayoutSelectTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:weightSum="2">
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/back"
+            android:id="@+id/buttonBackSelectTheme"
+            android:onClick="onClick"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            android:id="@+id/buttonSaveSelectTheme"
+            android:onClick="onClick"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

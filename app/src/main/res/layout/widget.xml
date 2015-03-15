@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dip" >
+
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"
+            android:src="@drawable/ic_action_previous_item"
+            android:id="@+id/buttonPreviousList"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            style = "@style/btnGlass"
+            android:theme="@style/btnGlass" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"
+            android:text="@string/loading"
+            android:id="@+id/textViewWidgetListName"
+            android:layout_toRightOf="@+id/buttonPreviousList"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/buttonNextList"
+            android:layout_toStartOf="@+id/buttonNextList"
+            style = "@style/btnGlass"
+            android:clickable="false" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"
+            android:src="@drawable/ic_action_next_item"
+            android:id="@+id/buttonNextList"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            style = "@style/btnGlass"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listViewWidget"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/buttonPreviousList" />
+
+    </RelativeLayout>
+</FrameLayout>

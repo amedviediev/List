@@ -33,9 +33,33 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/tip_edit"
+        android:id="@+id/buttonTipEdit"
+        android:layout_below="@+id/buttonTipAdd"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:clickable="false"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tip_edit_lists"
+        android:id="@+id/buttonTipEditLists"
+        android:layout_below="@+id/buttonTipEdit"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:clickable="false"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/tip_delete"
         android:id="@+id/buttonTipDelete"
-        android:layout_below="@+id/buttonTipAdd"
+        android:layout_below="@+id/buttonTipEditLists"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"

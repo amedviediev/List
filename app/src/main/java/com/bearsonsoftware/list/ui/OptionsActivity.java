@@ -119,6 +119,7 @@ public class OptionsActivity extends Activity {
             case R.id.buttonRemoveAds:
                 String payload = "pureListNoAdsPurchasePayload";
                 try{
+                    if (mHelper != null) mHelper.flagEndAsync();
                     mHelper.launchPurchaseFlow(this, BillingManager.SKU_NO_ADS, BillingManager.RC_REQUEST,
                             mPurchaseFinishedListener, payload);
                 } catch (Exception e){

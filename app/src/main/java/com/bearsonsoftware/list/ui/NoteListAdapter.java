@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bearsonsoftware.list.R;
@@ -87,6 +88,16 @@ public class NoteListAdapter extends ArrayAdapter<NoteList> implements Swappable
                     viewHolderItem = new ViewHolder();
                     viewHolderItem.noteListRowText = (TextView) convertView.findViewById(R.id.noteListRowText);
                     viewHolderItem.noteListRowCounter = (TextView) convertView.findViewById(R.id.noteListRowCounter);
+                    viewHolderItem.noteListRowCounter.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            View parentRow = (View) v.getParent();
+                            ListView listView = (ListView) parentRow.getParent();
+                            final int position = listView.getPositionForView(parentRow);
+                            NoteListActivity n = (NoteListActivity) v.getContext();
+                            n.changeItem(position);
+                        }
+                    });
                     convertView.setTag(viewHolderItem);
                 }  else {
                     viewHolderItem = (ViewHolder) convertView.getTag();

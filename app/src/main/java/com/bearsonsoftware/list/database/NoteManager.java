@@ -39,6 +39,7 @@ public class NoteManager extends AbstractDatabaseManager{
 
     private NoteManager (Context context){
         dbHelper = new DatabaseHelper(context);
+        //database = dbHelper.getWritableDatabase();
     }
 
     public void open() throws SQLException {
@@ -66,13 +67,14 @@ public class NoteManager extends AbstractDatabaseManager{
         database.execSQL(updateItemStatus);
     }
 
-    public Note createNote(String noteName, long listId, String reminderTime){
+    public Note createNote(String noteName, long listId, String reminderTime, long reminderID){
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.NOTE_NAME, noteName);
         values.put(DatabaseHelper.NOTE_LIST_ID, listId);
         values.put(DatabaseHelper.NOTE_POSITION, 1);
         values.put(DatabaseHelper.NOTE_ISACTIVE, 1); //1 = active note, 0 = done note
         values.put(DatabaseHelper.NOTE_REMINDER, reminderTime);
+        values.put(DatabaseHelper.NOTE_REMINDER_ID, reminderID);
 
         //increment all positions and add a new note to position 1
         String updatePositions = "update " + DatabaseHelper.TABLE_NOTES + " set " +
@@ -96,12 +98,25 @@ public class NoteManager extends AbstractDatabaseManager{
         return newNote;
     }
 
+    public void editNote(Note note){
+        database.delete(DatabaseHelper.TABLE_NOTES, DatabaseHelper.NOTE_ID
+                + " = " + note.getNoteID(), null);
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.NOTE_NAME, note.getNoteName());
+        values.put(DatabaseHelper.NOTE_LIST_ID, note.getListID());
+        values.put(DatabaseHelper.NOTE_POSITION, note.getNotePosition());
+        values.put(DatabaseHelper.NOTE_ISACTIVE, 1); //1 = active note, 0 = done note
+        values.put(DatabaseHelper.NOTE_REMINDER, note.getNoteReminder());
+        values.put(DatabaseHelper.NOTE_REMINDER_ID, note.getNoteReminderID());
+        database.insert(DatabaseHelper.TABLE_NOTES, null, values);
+    }
+
     public void deleteNote(Note note) {
         long id = note.getNoteID();
         long listID = note.getListID();
         System.out.println("Note deleted with id: " + id);
         String updatePositions = "update " + DatabaseHelper.TABLE_NOTES + " set " +
-                DatabaseHelper.NOTE_POSITION + " = " + DatabaseHelper.NOTE_POSITION + " -- 1 where " +
+                DatabaseHelper.NOTE_POSITION + " = " + DatabaseHelper.NOTE_POSITION + " - 1 where " +
                 DatabaseHelper.NOTE_POSITION + " > " + note.getNotePosition() + " and " +
                 DatabaseHelper.NOTE_LIST_ID + " = " + listID;
         database.execSQL(updatePositions);
@@ -145,6 +160,7 @@ public class NoteManager extends AbstractDatabaseManager{
         note.setNotePosition(cursor.getInt(3));
         note.setNoteIsActive(cursor.getInt(4));
         note.setNoteReminder(cursor.getString(5));
+        note.setNoteReminderID(cursor.getString(6));
         return note;
     }
 }

@@ -78,31 +78,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         valuesTipAdd.put(DatabaseHelper.NOTE_POSITION, 1);
         valuesTipAdd.put(DatabaseHelper.NOTE_ISACTIVE, 1); //1 = active note, 0 = done note
 
+        ContentValues valuesTipEdit = new ContentValues();
+        valuesTipEdit.put(DatabaseHelper.NOTE_NAME, context.getString(R.string.tip_edit));
+        valuesTipEdit.put(DatabaseHelper.NOTE_LIST_ID, tipsId);
+        valuesTipEdit.put(DatabaseHelper.NOTE_POSITION, 2);
+        valuesTipEdit.put(DatabaseHelper.NOTE_ISACTIVE, 1); //1 = active note, 0 = done note
+
         ContentValues valuesTipDelete = new ContentValues();
         valuesTipDelete.put(DatabaseHelper.NOTE_NAME, context.getString(R.string.tip_delete));
         valuesTipDelete.put(DatabaseHelper.NOTE_LIST_ID, tipsId);
-        valuesTipDelete.put(DatabaseHelper.NOTE_POSITION, 2);
+        valuesTipDelete.put(DatabaseHelper.NOTE_POSITION, 3);
         valuesTipDelete.put(DatabaseHelper.NOTE_ISACTIVE, 1); //1 = active note, 0 = done note
 
         ContentValues valuesTipComplete = new ContentValues();
         valuesTipComplete.put(DatabaseHelper.NOTE_NAME, context.getString(R.string.tip_complete));
         valuesTipComplete.put(DatabaseHelper.NOTE_LIST_ID, tipsId);
-        valuesTipComplete.put(DatabaseHelper.NOTE_POSITION, 3);
+        valuesTipComplete.put(DatabaseHelper.NOTE_POSITION, 4);
         valuesTipComplete.put(DatabaseHelper.NOTE_ISACTIVE, 1); //1 = active note, 0 = done note
 
         ContentValues valuesTipMove = new ContentValues();
         valuesTipMove.put(DatabaseHelper.NOTE_NAME, context.getString(R.string.tip_move));
         valuesTipMove.put(DatabaseHelper.NOTE_LIST_ID, tipsId);
-        valuesTipMove.put(DatabaseHelper.NOTE_POSITION, 4);
+        valuesTipMove.put(DatabaseHelper.NOTE_POSITION, 5);
         valuesTipMove.put(DatabaseHelper.NOTE_ISACTIVE, 1); //1 = active note, 0 = done note
 
         ContentValues valuesTipReminder = new ContentValues();
         valuesTipReminder.put(DatabaseHelper.NOTE_NAME, context.getString(R.string.tip_reminder));
         valuesTipReminder.put(DatabaseHelper.NOTE_LIST_ID, tipsId);
-        valuesTipReminder.put(DatabaseHelper.NOTE_POSITION, 5);
+        valuesTipReminder.put(DatabaseHelper.NOTE_POSITION, 6);
         valuesTipReminder.put(DatabaseHelper.NOTE_ISACTIVE, 1); //1 = active note, 0 = done note
 
         db.insert(TABLE_NOTES, null, valuesTipAdd);
+        db.insert(TABLE_NOTES, null, valuesTipEdit);
         db.insert(TABLE_NOTES, null, valuesTipDelete);
         db.insert(TABLE_NOTES, null, valuesTipComplete);
         db.insert(TABLE_NOTES, null, valuesTipMove);

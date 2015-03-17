@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
@@ -22,6 +21,7 @@ import android.widget.TextView;
 
 import com.bearsonsoftware.list.PureListApplication;
 import com.bearsonsoftware.list.actions.CancelSave;
+import com.bearsonsoftware.list.actions.ChangeNoteList;
 import com.bearsonsoftware.list.actions.SaveNoteList;
 import com.bearsonsoftware.list.R;
 import com.bearsonsoftware.list.billing.BillingManager;
@@ -58,6 +58,8 @@ public class NoteListActivity extends Activity{
     private ArrayList<NoteList> noteLists;
 
     private IabHelper mHelper;
+    private View viewChange;
+    private EditText noteListChangeEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +97,6 @@ public class NoteListActivity extends Activity{
                         if (listView != null) {
                             listView.startDragging(position);
                         }
-                        System.out.println(noteLists.get(position).getListName());
                         return true;
                     }
                 }
@@ -121,6 +122,7 @@ public class NoteListActivity extends Activity{
                             noteListManager.deleteNoteList(noteLists.get(position));
                             adapter.remove(noteLists.get(position));
                         }
+                        noteListEditText.requestFocus();
                     }
                 }
         );
@@ -146,6 +148,25 @@ public class NoteListActivity extends Activity{
             }
         });
 
+        //init hidden view for changing items
+        viewChange = findViewById(R.id.noteListChangeItem);
+
+        //init edit text (used for changing items)
+        noteListChangeEditText = (EditText) findViewById(R.id.noteListChangeEditText);
+        noteListChangeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    ChangeNoteList.makeChange(viewChange, adapter, noteListManager, noteLists.get(0));
+                    refreshList();
+                    viewChange.setVisibility(View.GONE);
+                    viewChange.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         //set up google analytics
         //Get a Tracker (should auto-report)
         ((PureListApplication) getApplication()).getTracker(PureListApplication.TrackerName.APP_TRACKER);
@@ -153,18 +174,18 @@ public class NoteListActivity extends Activity{
 
     public void onClick(View view) {
         @SuppressWarnings("unchecked")
-        NoteList noteList;
+        NoteList tempNoteList;
         switch (view.getId()) {
             case R.id.buttonAdd:
                 // save the new comment to the database
-                noteList = new NoteList();
-                noteList.setCreated(false); //code to make adapter insert edittext
+                tempNoteList = new NoteList();
+                tempNoteList.setCreated(false); //code to make adapter insert edittext
                 //make sure we do not create multiple empty items
                 if(noteLists.isEmpty() || noteLists.get(0).isCreated()){
                     //Jelly Bean does not support smooth scroll
                     if(android.os.Build.VERSION.SDK_INT == android.os.Build.VERSION_CODES.JELLY_BEAN){
-                        adapter.add(0, noteList);
-                    } else listView.insert(0, noteList);
+                        adapter.add(0, tempNoteList);
+                    } else listView.insert(0, tempNoteList);
                 }
                 listView.smoothScrollToPosition(0);
 
@@ -194,9 +215,19 @@ public class NoteListActivity extends Activity{
                 SaveNoteList.save(viewNew, adapter, noteListManager);
                 viewNew.setVisibility(View.GONE);
                 break;
+            case R.id.noteListChangeButton:
+                ChangeNoteList.makeChange(viewChange, adapter, noteListManager, noteLists.get(0));
+                refreshList();
+                viewChange.setVisibility(View.GONE);
+                viewChange.requestFocus();
+                break;
             case R.id.noteListNewBackground:
                 CancelSave.cancel(viewNew, adapter);
                 viewNew.setVisibility(View.GONE);
+                break;
+            case R.id.noteListChangeBackground:
+                CancelSave.cancel(viewChange, adapter);
+                viewChange.setVisibility(View.GONE);
                 break;
         }
         adapter.notifyDataSetChanged();
@@ -207,12 +238,52 @@ public class NoteListActivity extends Activity{
         inputMethodManager.toggleSoftInputFromWindow(view.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
     }
 
+    public void changeItem(int position){
+        final NoteList tempNoteList = new NoteList();
+        final NoteList noteListToChange = noteLists.get(position);
+        tempNoteList.setListID(noteListToChange.getListID());
+        int noteListPosition = noteListToChange.getListPosition();
+
+        tempNoteList.setCreated(false); //code to make adapter insert edittext
+        //make sure we do not create multiple empty items
+        if(noteLists.isEmpty() || noteLists.get(0).isCreated()){
+            //Jelly Bean does not support smooth scroll
+            if(android.os.Build.VERSION.SDK_INT == android.os.Build.VERSION_CODES.JELLY_BEAN){
+                adapter.add(0, tempNoteList);
+            } else listView.insert(0, tempNoteList);
+        }
+        tempNoteList.setListPosition(noteListPosition);
+        listView.smoothScrollToPosition(0);
+
+        //smoothly bring up view with edit text
+        listView.postDelayed(new Runnable() {
+            public void run() {
+                View viewBg = findViewById(R.id.noteListChangeBackground);
+
+                noteListChangeEditText.setText(noteListToChange.getListName());
+
+                viewBg.setBackgroundColor(Color.parseColor("#90000000"));
+                viewChange.setVisibility(View.VISIBLE);
+                viewChange.post(new Runnable() {
+                    public void run() {
+                        noteListChangeEditText.requestFocusFromTouch();
+                        showKeyboard(viewChange);
+                    }
+                });
+            }
+        }, 350); //350ms = time it takes for listview insert animation to finish
+    }
+
     @Override
     public void onBackPressed(){
         if (viewNew.getVisibility() == View.VISIBLE) {
             CancelSave.cancel(viewNew, adapter);
             viewNew.setVisibility(View.GONE);
             viewNew.requestFocus();
+        } else if (viewChange.getVisibility() == View.VISIBLE){
+            CancelSave.cancel(viewChange, adapter);
+            viewChange.setVisibility(View.GONE);
+            viewChange.requestFocus();
         } else super.onBackPressed();
     }
 
@@ -255,13 +326,10 @@ public class NoteListActivity extends Activity{
             }
         });
 
-        noteListManager.open();
     }
 
     @Override
     protected void onPause() {
-        noteListManager.close();
-
         //update widget
         Intent intent = new Intent(this, ListWidget.class);
 
@@ -282,24 +350,28 @@ public class NoteListActivity extends Activity{
             mHelper.dispose();
             mHelper = null;
         }
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        noteListManager.open();
 
         //update notelist after changes might have been made to notes
         switch(requestCode) {
             case (STATIC_NOTE_REQUEST_CODE) : {
                 if (resultCode == Activity.RESULT_OK) {
-                    adapter.clear();
-                    noteLists = noteListManager.getAllNoteLists();
-                    adapter = new NoteListAdapter(this, noteLists);
-                    listView.setAdapter(adapter);
+                    refreshList();
                 }
             }
         }
+    }
+
+    protected void refreshList(){
+        adapter.clear();
+        noteLists = noteListManager.getAllNoteLists();
+        adapter = new NoteListAdapter(this, noteLists);
+        listView.setAdapter(adapter);
     }
 
     // Listener that's called when we finish querying the items and subscriptions we own

@@ -7,7 +7,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -22,6 +21,8 @@ import android.widget.TextView;
 
 import com.bearsonsoftware.list.PureListApplication;
 import com.bearsonsoftware.list.actions.CancelSave;
+import com.bearsonsoftware.list.actions.ChangeNote;
+import com.bearsonsoftware.list.alarms.DeleteCalenderEvent;
 import com.bearsonsoftware.list.actions.SaveNote;
 import com.bearsonsoftware.list.R;
 import com.bearsonsoftware.list.billing.BillingManager;
@@ -56,7 +57,11 @@ public class NoteActivity extends Activity {
     private View viewNew;
     private Button reminderButton;
     private EditText noteEditText;
+    private View viewChange;
+    private Button changeReminderButton;
+    private EditText noteChangeEditText;
     private AdView adView;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,8 +124,14 @@ public class NoteActivity extends Activity {
                             }
                         } else {
                             for (int position : reverseSortedPositions) {
+                                //delete reminder if exists
+                                if (notes.get(position).getNoteReminder() != null){
+                                    DeleteCalenderEvent.delete
+                                            (getApplicationContext(), notes.get(position).getNoteReminderID());
+                                }
                                 noteManager.deleteNote(notes.get(position));
                                 adapter.remove(notes.get(position));
+
                             }
                         }
                     }
@@ -133,7 +144,7 @@ public class NoteActivity extends Activity {
                     public boolean onItemLongClick(final AdapterView<?> parent, final View view,
                                                    final int position, final long id) {
                         if (listView != null) {
-                            listView.startDragging(position - listView.getHeaderViewsCount());
+                            listView.startDragging(position);
                         }
                         return true;
                     }
@@ -143,7 +154,48 @@ public class NoteActivity extends Activity {
         listView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println(notes.get(position).getNotePosition());
+                Note tempNote = new Note();
+                final Note noteToChange = notes.get(position);
+                tempNote.setNoteID(noteToChange.getNoteID());
+                tempNote.setListID(noteToChange.getListID());
+                int notePosition = noteToChange.getNotePosition();
+                tempNote.setNoteIsActive(1);
+                tempNote.setNoteReminderID(noteToChange.getNoteReminderID());
+
+                tempNote.setCreated(false); //code to make adapter insert edittext
+                //make sure we do not create multiple empty items
+                if(notes.isEmpty() || notes.get(0).isCreated()){
+                    //Jelly Bean does not support smooth scroll
+                    if(android.os.Build.VERSION.SDK_INT == android.os.Build.VERSION_CODES.JELLY_BEAN){
+                        adapter.add(0, tempNote);
+                    } else listView.insert(0, tempNote);
+                }
+                tempNote.setNotePosition(notePosition);
+                listView.smoothScrollToPosition(0);
+
+
+                //smoothly bring up view with edit text
+                listView.postDelayed(new Runnable() {
+                    public void run() {
+                        View viewBg = findViewById(R.id.noteChangeBackground);
+
+                        noteChangeEditText.setText(noteToChange.getNoteName());
+                        if (noteToChange.getNoteReminder() != null){
+                            changeReminderButton.setText(getString(R.string.reminder_on) +
+                            noteToChange.getNoteReminder());
+                        }
+
+                        viewBg.setBackgroundColor(Color.parseColor("#BB000000"));
+                        viewChange.setVisibility(View.VISIBLE);
+                        viewChange.post(new Runnable() {
+                            public void run() {
+                                noteChangeEditText.requestFocusFromTouch();
+                                showKeyboard(viewChange);
+                            }
+                        });
+                    }
+                }, 400);  //400ms = time it takes for listview insert animation to finish
+
             }
         });
 
@@ -179,6 +231,27 @@ public class NoteActivity extends Activity {
             }
         });
 
+        //init hidden view for changing items
+        viewChange = findViewById(R.id.noteChangeItem);
+        changeReminderButton = (Button) findViewById(R.id.setChangeReminderButton);
+
+        //init edit text (used for changing items)
+        noteChangeEditText = (EditText) findViewById(R.id.noteChangeEditText);
+        noteChangeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    ChangeNote.makeChange(viewChange, adapter, noteManager, notes.get(0));
+                    refreshList();
+                    viewChange.setVisibility(View.GONE);
+                    viewChange.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
         //set up google analytics
         //Get a Tracker (should auto-report)
         ((PureListApplication) getApplication()).getTracker(PureListApplication.TrackerName.APP_TRACKER);
@@ -203,14 +276,12 @@ public class NoteActivity extends Activity {
     protected void onResume(){
         super.onResume();
         new ThemeManager(this).applyTheme();
-        noteManager.open();
 
         if(adView != null) adView.resume();
     }
 
     @Override
     protected void onPause() {
-
         //update widget
         Intent intent = new Intent(this, ListWidget.class);
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
@@ -218,7 +289,6 @@ public class NoteActivity extends Activity {
                 (getApplication()).getAppWidgetIds(new ComponentName(getApplication(), ListWidget.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         sendBroadcast(intent);
-
 
         //pause ads
         if(adView != null) adView.pause();
@@ -228,17 +298,17 @@ public class NoteActivity extends Activity {
 
     public void onClick(View view) {
         @SuppressWarnings("unchecked")
-        Note note;
+        Note tempNote;
         switch (view.getId()) {
             case R.id.buttonAddNote:
-                note = new Note();
-                note.setCreated(false); //code to make adapter insert edittext
+                tempNote = new Note();
+                tempNote.setCreated(false); //code to make adapter insert edittext
                 //make sure we do not create multiple empty items
                 if(notes.isEmpty() || notes.get(0).isCreated()){
                     //Jelly Bean does not support smooth scroll
                     if(android.os.Build.VERSION.SDK_INT == android.os.Build.VERSION_CODES.JELLY_BEAN){
-                        adapter.add(0, note);
-                    } else listView.insert(0, note);
+                        adapter.add(0, tempNote);
+                    } else listView.insert(0, tempNote);
                 }
 
                 listView.smoothScrollToPosition(0);
@@ -269,6 +339,12 @@ public class NoteActivity extends Activity {
                 SaveNote.save(viewNew, adapter, noteManager, listId, notes.get(0).getNoteReminder());
                 viewNew.setVisibility(View.GONE);
                 break;
+            case R.id.noteChangeButton:
+                ChangeNote.makeChange(viewChange, adapter, noteManager, notes.get(0));
+                refreshList();
+                viewChange.setVisibility(View.GONE);
+                viewChange.requestFocus();
+                break;
             case R.id.setReminderButton:
                 viewNew.post(new Runnable() {
                     public void run() {
@@ -277,9 +353,21 @@ public class NoteActivity extends Activity {
                 });
                 showSetReminderDialog();
                 break;
+            case R.id.setChangeReminderButton:
+                viewChange.post(new Runnable() {
+                    public void run() {
+                        hideKeyboard(viewChange);
+                    }
+                });
+                showSetReminderDialog();
+                break;
             case R.id.noteNewBackground:
                 CancelSave.cancel(viewNew, adapter);
                 viewNew.setVisibility(View.GONE);
+                break;
+            case R.id.noteChangeBackground:
+                CancelSave.cancel(viewChange, adapter);
+                viewChange.setVisibility(View.GONE);
                 break;
         }
         adapter.notifyDataSetChanged();
@@ -296,12 +384,24 @@ public class NoteActivity extends Activity {
         in.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+
+    protected void refreshList(){
+        adapter.clear();
+        notes = noteManager.getAllNotes(listId);
+        adapter = new NoteAdapter(this, notes);
+        listView.setAdapter(adapter);
+    }
+
     @Override
     public void onBackPressed(){
         if (viewNew.getVisibility() == View.VISIBLE) {
             CancelSave.cancel(viewNew, adapter);
             viewNew.setVisibility(View.GONE);
             viewNew.requestFocus();
+        } else if (viewChange.getVisibility() == View.VISIBLE){
+            CancelSave.cancel(viewChange, adapter);
+            viewChange.setVisibility(View.GONE);
+            viewChange.requestFocus();
         } else {
             Intent resultIntent;
             resultIntent = new Intent();
@@ -323,7 +423,9 @@ public class NoteActivity extends Activity {
         Note note = notes.get(0);
         note.setNoteReminder(reminderDate);
         adapter.notifyDataSetChanged();
-        reminderButton.setText("Reminder on: " + reminderDate);
+        if (viewNew.getVisibility() == View.VISIBLE) {
+            reminderButton.setText(getString(R.string.reminder_on) + reminderDate);
+        } else changeReminderButton.setText(getString(R.string.reminder_on) + reminderDate);
         viewNew.post(new Runnable() {
             public void run() {
                 noteEditText.requestFocusFromTouch();

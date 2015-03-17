@@ -20,7 +20,7 @@ public class CalendarReminderManager {
 
     }
 
-    public void addReminder(Context context, String dateAndTime, String title){
+    public long addReminder(Context context, String dateAndTime, String title){
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy HH:mm");
 
@@ -55,5 +55,7 @@ public class CalendarReminderManager {
         reminderValues.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
 
         Uri reminderUri = context.getContentResolver().insert(CalendarContract.Reminders.CONTENT_URI, reminderValues);
+
+        return eventID;
     }
 }

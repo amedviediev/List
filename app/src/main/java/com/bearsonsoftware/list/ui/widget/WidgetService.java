@@ -26,7 +26,6 @@ public class WidgetService extends RemoteViewsService {
         NoteManager noteManager = NoteManager.getInstance(getApplicationContext());
         noteManager.open();
         ArrayList<Note> notes = noteManager.getAllNotes(listId);
-        noteManager.close();
         return new WidgetListProvider(this.getApplicationContext(), intent, notes, listId);
     }
 

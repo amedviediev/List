@@ -79,6 +79,13 @@ public class NoteListManager extends AbstractDatabaseManager{
         return newNoteList;
     }
 
+    public void editNoteList(NoteList noteList){
+        String updateNoteList = "update " + DatabaseHelper.TABLE_LISTS + " set " +
+                DatabaseHelper.LIST_NAME + " = '" + noteList.getListName() + "' where " +
+                DatabaseHelper.LIST_ID + " = " + noteList.getListID();
+        database.execSQL(updateNoteList);
+    }
+
     public void deleteNoteList(NoteList noteList) {
         long id = noteList.getListID();
         System.out.println("Notelist deleted with id: " + id);

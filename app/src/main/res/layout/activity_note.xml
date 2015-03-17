@@ -101,7 +101,7 @@
                     android:layout_weight="15"
                     android:layout_height="50dp"
                     android:onClick="onClick"
-                    android:drawableLeft="@drawable/ic_action_new"
+                    android:drawableLeft="@drawable/ic_action_accept"
                     android:id="@+id/noteSaveButton"/>
             </LinearLayout>
 
@@ -124,6 +124,73 @@
             android:background="@null">
         </LinearLayout>
     </LinearLayout>
+
+    <!--invisible layout containing controls to edit items -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/noteChangeItem"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:background="@null"/>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:orientation="vertical"
+            android:id="@+id/noteChangeEdit">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:weightSum="100">
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_weight="85"
+                    android:layout_height="50dp"
+                    android:hint="@string/note_hint"
+                    android:id="@+id/noteChangeEditText"
+                    android:focusableInTouchMode="true"
+                    android:focusable="true"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="16dp"
+                    android:inputType="text|textAutoCorrect|textCapSentences"
+                    android:imeOptions="actionGo"
+                    android:singleLine="true"
+                    android:maxLength="50"> <requestFocus />
+                </EditText>
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_weight="15"
+                    android:layout_height="50dp"
+                    android:onClick="onClick"
+                    android:drawableLeft="@drawable/ic_action_accept"
+                    android:id="@+id/noteChangeButton"/>
+            </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:text="@string/set_reminder"
+                android:id="@+id/setChangeReminderButton"
+                android:onClick="onClick"
+                android:textSize="@dimen/reminder_button_text_size"
+                android:textStyle="normal" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/noteChangeBackground"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:background="@null">
+        </LinearLayout>
+    </LinearLayout>
+
 
 
 </RelativeLayout>

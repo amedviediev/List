@@ -56,7 +56,6 @@ public class ListWidget extends AppWidgetProvider{
         noteListManager.open();
         noteLists = noteListManager.getAllNoteLists();
         int size = noteLists.size();
-        noteListManager.close();
 
         settings = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
 

@@ -12,6 +12,7 @@
     <string name="note_list_hint">Enter list name</string>
     <string name="note_hint">Enter item name</string>
     <string name="set_reminder_time">Set reminder time</string>
+    <string name="reminder_on">Reminder on: </string>
     <string name="themes">Themes</string>
     <string name="tips">Tips and tricks</string>
     <string name="about">About</string>
@@ -22,6 +23,8 @@
     <string name="default_list_name">Default list</string>
     <string name="tips_list_name">Tips</string>
     <string name="tip_add">Add items by pressing \"Add\"</string>
+    <string name="tip_edit">Edit items by pressing them</string>
+    <string name="tip_edit_lists">You can edit lists by pressing the counter</string>
     <string name="tip_delete">Delete items by swiping them left</string>
     <string name="tip_complete">Mark items done by swiping them right</string>
     <string name="tip_move">Long-press items and move them around</string>
@@ -29,7 +32,7 @@
 
     <string name="tip_header">Did you know that you can:</string>
 
-    <string name="about_version">Version 1.0.9a</string>
+    <string name="about_version">Version 1.0.10</string>
     <string name="about_copyright">Copyright Bearson Software 2015. All rights reserved.</string>
     <string name="about_website">Website: http://bearsonsoftware.com</string>
     <string name="about_contact">For any questions or suggestions, email us at:</string>

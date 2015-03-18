@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pure List</string>
+    <string name="about">Sobre</string>
+    <string name="about_contact">Para dúvidas ou sugestões, envie um email para:</string>
+    <string name="add">Adicionar</string>
+    <string name="back">Voltar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="default_list_name">Lista padrão</string>
+    <string name="no_tasks">Ainda não há tarefas</string>
+    <string name="note_hint">Digite o nome do item</string>
+    <string name="note_list_hint">Digite o nome da lista</string>
+    <string name="options">Opções</string>
+    <string name="reminder_on">Lembrete em</string>
+    <string name="remove_ads">Remova os anúncios</string>
+    <string name="save">Preservar</string>
+    <string name="set_reminder">Definir lembrete</string>
+    <string name="set_reminder_time">Definir o tempo de lembrete</string>
+    <string name="tip_add">Adicionar itens pressionando \ "Adicionar \"</string>
+    <string name="tip_complete">Marcar itens feito passando-los à direita</string>
+    <string name="tip_delete">Eliminar itens passando com os deixou</string>
+    <string name="tip_edit">Edite itens pressionando-os</string>
+    <string name="tip_edit_lists">Você pode editar listas pressionando o contador</string>
+    <string name="tip_header">Você sabia que você pode:</string>
+    <string name="tip_move">Itens de longo imprensa e movê-los</string>
+    <string name="tip_reminder">Definir lembretes para itens importantes</string>
+    <string name="tips">Dicas e truques</string>
+    <string name="banner_ad_unit_id">ca-app-pub-9300731596672962/5645531130</string>
+    <string name="loading">Loading.</string>
+    <string name="none">null</string>
+    <string name="theme_default">Default</string>
+    <string name="theme_forest">Forest</string>
+    <string name="theme_iris">Iris</string>
+    <string name="theme_princess">Princess</string>
+    <string name="theme_sunset">Sunset</string>
+    <string name="themes">Themes</string>
+    <string name="tips_list_name">Dicas</string>
+</resources>

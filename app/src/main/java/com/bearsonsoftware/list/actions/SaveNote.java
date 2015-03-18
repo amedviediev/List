@@ -1,6 +1,7 @@
 package com.bearsonsoftware.list.actions;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteException;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -28,7 +29,11 @@ public class SaveNote {
         long reminderID = 0;
         //set calendar event if necessary
         if(reminderTime != null){
-            reminderID = new CalendarReminderManager().addReminder(view.getContext(), reminderTime, name);
+            try{
+                reminderID = new CalendarReminderManager().addReminder(view.getContext(), reminderTime, name);
+            } catch (SQLiteException e){
+                e.printStackTrace();
+            }
         }
 
         note = noteManager.createNote(name, listId, reminderTime, reminderID);

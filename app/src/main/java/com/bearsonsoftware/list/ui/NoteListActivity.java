@@ -182,8 +182,8 @@ public class NoteListActivity extends Activity{
                 tempNoteList.setCreated(false); //code to make adapter insert edittext
                 //make sure we do not create multiple empty items
                 if(noteLists.isEmpty() || noteLists.get(0).isCreated()){
-                    //Jelly Bean does not support smooth scroll
-                    if(android.os.Build.VERSION.SDK_INT == android.os.Build.VERSION_CODES.JELLY_BEAN){
+                    //Jelly Bean before 4.3 does not support smooth scroll
+                    if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2){
                         adapter.add(0, tempNoteList);
                     } else listView.insert(0, tempNoteList);
                 }
@@ -247,8 +247,8 @@ public class NoteListActivity extends Activity{
         tempNoteList.setCreated(false); //code to make adapter insert edittext
         //make sure we do not create multiple empty items
         if(noteLists.isEmpty() || noteLists.get(0).isCreated()){
-            //Jelly Bean does not support smooth scroll
-            if(android.os.Build.VERSION.SDK_INT == android.os.Build.VERSION_CODES.JELLY_BEAN){
+            //Jelly Bean before 4.3 does not support smooth scroll
+            if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2){
                 adapter.add(0, tempNoteList);
             } else listView.insert(0, tempNoteList);
         }

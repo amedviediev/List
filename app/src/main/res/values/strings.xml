@@ -32,11 +32,11 @@
 
     <string name="tip_header">Did you know that you can:</string>
 
-    <string name="about_version">Version 1.0.10</string>
-    <string name="about_copyright">Copyright Bearson Software 2015. All rights reserved.</string>
-    <string name="about_website">Website: http://bearsonsoftware.com</string>
+    <string name="about_version" translatable="false">Version 1.0.10</string>
+    <string name="about_copyright" translatable="false">Copyright Bearson Software 2015. All rights reserved.</string>
+    <string name="about_website" translatable="false">Website: http://bearsonsoftware.com</string>
     <string name="about_contact">For any questions or suggestions, email us at:</string>
-    <string name="about_email">sales@bearsonsoftware.com</string>
+    <string name="about_email" translatable="false">sales@bearsonsoftware.com</string>
 
     <string name="theme_default">Default</string>
     <string name="theme_forest">Forest</string>

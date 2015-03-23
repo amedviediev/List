@@ -120,8 +120,12 @@ public class OptionsActivity extends Activity {
                 String payload = "pureListNoAdsPurchasePayload";
                 try{
                     if (mHelper != null) mHelper.flagEndAsync();
-                    mHelper.launchPurchaseFlow(this, BillingManager.SKU_NO_ADS, BillingManager.RC_REQUEST,
-                            mPurchaseFinishedListener, payload);
+                    try{
+                        mHelper.launchPurchaseFlow(this, BillingManager.SKU_NO_ADS, BillingManager.RC_REQUEST,
+                                mPurchaseFinishedListener, payload);
+                    } catch (IllegalStateException e){
+                        e.printStackTrace();
+                    }
                 } catch (Exception e){
                     alert("An unexpected error occured");
                 }

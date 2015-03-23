@@ -32,7 +32,7 @@
 
     <string name="tip_header">Did you know that you can:</string>
 
-    <string name="about_version" translatable="false">Version 1.0.10</string>
+    <string name="about_version" translatable="false">Version 1.0.11</string>
     <string name="about_copyright" translatable="false">Copyright Bearson Software 2015. All rights reserved.</string>
     <string name="about_website" translatable="false">Website: http://bearsonsoftware.com</string>
     <string name="about_contact">For any questions or suggestions, email us at:</string>

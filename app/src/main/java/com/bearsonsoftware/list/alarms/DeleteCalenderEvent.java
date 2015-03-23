@@ -16,10 +16,14 @@ public class DeleteCalenderEvent {
      */
     public static void delete(Context context, String eventIdString){
         Uri deleteUri;
-        if(!eventIdString.equals(null)){
-            long eventID = Long.parseLong(eventIdString);
-            deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
-            context.getContentResolver().delete(deleteUri, null, null);
+        try{
+            if(!eventIdString.equals(null)){
+                long eventID = Long.parseLong(eventIdString);
+                deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
+                context.getContentResolver().delete(deleteUri, null, null);
+            }
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
 }
